@@ -1,5 +1,24 @@
 Cost-Optimized Deployment Platform for Small Developers
 
+## 🚀 Getting Started
+
+### Prerequisites
+- AWS Account
+- terraform installed
+- GitHub repository
+- kubectl installed (for local admin if needed)
+
+
+## steps to run
+1. Set your AWS credentials locally
+
+bash
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+export AWS_REGION=us-east-1
+
+
+
 ## 🛠️ Problem Statement
 
 Small development teams and startups often face a significant challenge: building a robust, production-ready deployment platform without incurring high operational costs. Managed services like AWS EKS, ECS, and ALB, while powerful, are prohibitively expensive for small-scale projects. Additionally, setting up a complete CI/CD pipeline, monitoring, and logging infrastructure requires expertise and can be time-consuming. This creates a barrier for teams looking to deploy applications efficiently while staying within budget.
@@ -27,7 +46,7 @@ Here’s the logical design:
         |
      GitHub Actions
         |
-  Build + Push Docker image
+  Build  Push Docker image
         |
         v
       AWS ECR
@@ -63,13 +82,7 @@ Everything runs on the same VM.
 - **Modern Tech Stack**: Kubernetes, Docker, Terraform, GitHub Actions
 - **DevOps Expertise**: End-to-end platform engineering experience
 
-## 🚀 Getting Started
 
-### Prerequisites
-- AWS Account
-- Domain name (for SSL certificates)
-- GitHub repository
-- Basic knowledge of Docker and Kubernetes
 
 ### Quick Setup
 1. **Clone the repository**
@@ -101,3 +114,4 @@ deployment-platform/
 ❗ 9. Not Suitable for Compliance (Security Considerations)
 ❗ 10. Backups Must Be Manual
 ❗ 11. No Guaranteed SLAs
+
