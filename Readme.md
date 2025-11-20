@@ -8,15 +8,53 @@ Cost-Optimized Deployment Platform for Small Developers
 - GitHub repository
 - kubectl installed (for local admin if needed)
 
-
-## steps to run
+-------------
+### steps to run
 1. Set your AWS credentials locally
 
-bash
-export AWS_ACCESS_KEY_ID=...
-export AWS_SECRET_ACCESS_KEY=...
-export AWS_REGION=us-east-1
+```bash
+aws configure
+```
+AWS_ACCESS_KEY_ID=[...]
+AWS_SECRET_ACCESS_KEY=[...]
+AWS_REGION=[...]
 
+2. Terraform: Provision infra
+```bash
+cd terraform
+terraform init
+terraform apply -auto-approve
+```
+
+Terraform will output:
+-ec2_public_ip
+-ecr_repo_url
+-ssh_private_key_path (if you let terraform generate key)
+
+
+3. SSH into EC2 (optional)
+```bash
+ssh -i ./terraform/k3s_key.pem ubuntu@<ec2_public_ip>
+# check k3s: sudo kubectl get nodes
+```
+
+
+4. Configure GitHub Secrets
+
+--------
+Add these secrets to your GitHub repo (Settings -> Secrets):
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+AWS_REGION (same as terraform)
+ECR_REPO (value from terraform output)
+EC2_USER (ubuntu)
+EC2_HOST (ec2_public_ip)
+EC2_SSH_KEY (private key contents)
+--------
+
+5. Push code -> GitHub Actions will build, push, and deploy.
+
+-------------
 
 
 ## 🛠️ Problem Statement
@@ -41,11 +79,13 @@ Instead of using expensive managed services (EKS, ECS, ALB, CloudWatch), you:
 
 🏗️ Architecture Overview
 Here’s the logical design:
-
+```
       GitHub
         |
+        v
      GitHub Actions
         |
+        v
   Build  Push Docker image
         |
         v
@@ -60,7 +100,7 @@ Here’s the logical design:
     ├── Prometheus (Metrics)
     ├── Grafana (Dashboard)
     └── Loki (Logs)
-
+```
 
 Everything runs on the same VM.
 
