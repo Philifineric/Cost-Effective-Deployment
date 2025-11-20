@@ -134,12 +134,27 @@ Everything runs on the same VM.
 
 ## 📋 Project Structure
 ```
-deployment-platform/
-├── terraform/           # Infrastructure as Code
-├── kubernetes/          # K8s manifests
-├── monitoring/          # Prometheus/Grafana configs
-├── github-actions/      # CI/CD workflows
-└── examples/           # Sample applications
+/ (root)
+├─ terraform/
+│ ├─ provider.tf
+│ ├─ vpc.tf
+│ ├─ ec2.tf
+│ ├─ ecr.tf
+│ ├─ outputs.tf
+│ └─ variables.tf
+├─ k3s/
+│ └─ install_k3s.sh
+├─ app/
+│ ├─ Dockerfile
+│ ├─ requirements.txt
+│ └─ main.py
+├─ k8s/
+│ ├─ namespace.yaml
+│ ├─ deployment.yaml
+│ ├─ service.yaml
+│ └─ ingress.yaml
+├─ .github/workflows/deploy.yml
+└─ README.md
 ```
 
 ## cons of the project
