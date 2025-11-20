@@ -41,7 +41,7 @@ ssh -i ./terraform/k3s_key.pem ubuntu@<ec2_public_ip>
 
 4. Configure GitHub Secrets
 
---------
+```
 Add these secrets to your GitHub repo (Settings -> Secrets):
 AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
@@ -50,7 +50,7 @@ ECR_REPO (value from terraform output)
 EC2_USER (ubuntu)
 EC2_HOST (ec2_public_ip)
 EC2_SSH_KEY (private key contents)
---------
+```
 
 5. Push code -> GitHub Actions will build, push, and deploy.
 
