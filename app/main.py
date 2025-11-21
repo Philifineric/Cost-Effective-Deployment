@@ -7,5 +7,5 @@ app = FastAPI()
 ## will edit this later and add code for a useful application
 @app.get("/")
 def hello():
-return {"message": "Hello from cost-optimized k3s platform!"}
+    return {"message": "Hello from cost-optimized k3s platform!"}
 

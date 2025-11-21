@@ -1,0 +1,57 @@
+
+# GitHub Actions workflow to build, push, and deploy a Docker image to k3s on AWS EC2
+name: Build and Deploy
+
+
+
+# Trigger workflow on push to main branch
+on:
+  push:
+    branches: [ main ]
+
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+    # Step 1: Checkout the repository code
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Step 2: Configure AWS credentials for this workflow using secrets
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  # AWS access key from GitHub secrets
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}  # AWS secret key from GitHub secrets
+        aws-region: ${{ secrets.AWS_REGION }}  # AWS region from GitHub secrets
+
+    # Step 3: Log in to Amazon ECR to push/pull Docker images
+    - name: Login to ECR
+      id: ecr_login
+      uses: aws-actions/amazon-ecr-login@v1
+
+    # Step 4: Build, tag, and push Docker image to ECR
+    - name: Build, tag, and push image to ECR
+      env:
+        ECR_REPO: ${{ secrets.ECR_REPO }}  # ECR repository URL from GitHub secrets
+      run: |
+        IMAGE_TAG=${GITHUB_SHA::8}  # Use the first 8 characters of the commit SHA as the image tag
+        IMAGE_URI=${ECR_REPO}:${IMAGE_TAG}  # Full image URI
+        docker build -t $IMAGE_URI ./app  # Build Docker image from ./app directory
+        docker push $IMAGE_URI  # Push image to ECR
+        echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV  # Save IMAGE_URI as a GitHub Actions environment variable
+
+    # Step 5: Deploy to k3s cluster on EC2 via SSH
+    - name: Deploy to k3s via SSH
+      uses: appleboy/ssh-action@master  # Use SSH to connect to EC2 and deploy
+      env:
+        IMAGE_URI: ${{ env.IMAGE_URI }}  # Pass the built image URI to the remote server
+      with:
+        host: ${{ secrets.EC2_HOST }}  # EC2 public IP from GitHub secrets
+        username: ${{ secrets.EC2_USER }}  # SSH username (usually 'ubuntu')
+        key: ${{ secrets.EC2_SSH_KEY }}  # SSH private key from GitHub secrets
+        script: |
+          # Try to update the deployment image; if it fails, apply the manifest (first deploy)
+          kubectl -n sample-app set image deployment/sample-app app=$IMAGE_URI || kubectl apply -f ~/k8s

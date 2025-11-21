@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: YOUR_DOMAIN_OR_IP.nip.io
+  - host: <ec2_public_ip>.nip.io # Replace <ec2_public_ip> with your EC2 instance's public IP
     http:
     paths:
     - path: /
