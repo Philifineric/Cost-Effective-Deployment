@@ -19,7 +19,22 @@ AWS_ACCESS_KEY_ID=[...]
 AWS_SECRET_ACCESS_KEY=[...]
 AWS_REGION=[...]
 
-2. Terraform: Provision infra
+
+2. Configure Terraform backend resources
+```bash
+cd terraform-backend-resources
+terraform init
+terraform apply -auto-approve
+```
+
+3. Configure Terraform backend
+```bash
+cd terraform-backend
+terraform init
+terraform apply -auto-approve
+```
+
+4. Terraform: Provision infra
 ```bash
 cd terraform
 terraform init
@@ -32,14 +47,14 @@ Terraform will output:
 -ssh_private_key_path (if you let terraform generate key)
 
 
-3. SSH into EC2 (optional)
+5. SSH into EC2 (optional)
 ```bash
 ssh -i ./terraform/k3s_key.pem ubuntu@<ec2_public_ip>
 # check k3s: sudo kubectl get nodes
 ```
 
 
-4. Configure GitHub Secrets
+6. Configure GitHub Secrets
 
 ```
 Add these secrets to your GitHub repo (Settings -> Secrets):
@@ -52,7 +67,7 @@ EC2_HOST (ec2_public_ip)
 EC2_SSH_KEY (private key contents)
 ```
 
-5. Push code -> GitHub Actions will build, push, and deploy.
+7. Push code -> GitHub Actions will build, push, and deploy.
 
 -------------
 
