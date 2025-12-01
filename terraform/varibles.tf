@@ -11,10 +11,12 @@ variable "instance_type" {
 
 # Name for the AWS key pair
 variable "key_name" {
-	default = "k3s_key"
+	description = "name for the AWS key pair"
+  	type        = string
 }
 
 # Path to the public SSH key used for EC2 access
 variable "public_key_path" {
-	default = "~/.ssh/id_rsa.pub"
+	description = "Path to the public SSH key used for EC2 access"
+  	type        = string
 }

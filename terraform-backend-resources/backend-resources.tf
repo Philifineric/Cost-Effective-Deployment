@@ -1,6 +1,11 @@
+#to run  
+#terraform init
+#terraform apply -var-file=backend-resources.config
+
+
 # S3 bucket for Terraform state
 resource "aws_s3_bucket" "tf_state" {
-  bucket = "your-unique-tf-state-bucket-name" # Change to a globally unique name
+  bucket = var.backend_bucket_name # Change to a globally unique name
 }
 
 resource "aws_s3_bucket_versioning" "tf_state_versioning" {
@@ -12,7 +17,7 @@ resource "aws_s3_bucket_versioning" "tf_state_versioning" {
 
 # DynamoDB table for state locking
 resource "aws_dynamodb_table" "tf_lock" {
-  name         = "terraform-locks"
+  name         = var.backend_table_name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 

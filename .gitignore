@@ -1,0 +1,10 @@
+# Sensitive files
+*.pem
+*.key
+.env
+.aws/
+.ssh/
+terraform.tfstate
+terraform.tfstate.*
+.terraform/
+*.tfvars

@@ -1,16 +1,9 @@
-# Generate a new RSA private key for SSH access
-resource "tls_private_key" "k3s_key" {
-    algorithm = "RSA"
-    rsa_bits  = 4096
-}
 
 # Create an AWS key pair using the generated public key
 resource "aws_key_pair" "k3s" {
     key_name = var.key_name
     public_key = file(var.public_key_path)
 }
-
-
 
 # Security group for k3s node: allows SSH, HTTP, and HTTPS
 resource "aws_security_group" "k3s_sg" {
